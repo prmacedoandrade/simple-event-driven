@@ -1,4 +1,4 @@
-package com.estore.products.model;
+package com.estore.products.dto;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -6,7 +6,7 @@ import java.math.BigDecimal;
 import lombok.Data;
 
 @Data
-public class CreateProductRestModel implements Serializable{
+public class CreateProductDTO implements Serializable{
 	
 	private static final long serialVersionUID = 5398651485197408970L;
 	

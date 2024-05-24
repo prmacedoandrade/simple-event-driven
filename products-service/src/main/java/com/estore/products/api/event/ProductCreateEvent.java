@@ -1,4 +1,4 @@
-package com.estore.products.event;
+package com.estore.products.api.event;
 
 import java.math.BigDecimal;
 

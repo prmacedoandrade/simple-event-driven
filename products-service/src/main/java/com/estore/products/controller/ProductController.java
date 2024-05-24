@@ -12,8 +12,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.estore.products.command.CreateProductCommand;
-import com.estore.products.model.CreateProductRestModel;
+import com.estore.products.api.command.CreateProductCommand;
+import com.estore.products.dto.CreateProductDTO;
 
 @RestController
 @RequestMapping("/products")
@@ -30,7 +30,7 @@ public class ProductController {
 	}
 
 	@PostMapping
-	public String createProduct(@RequestBody CreateProductRestModel createProductRestModel) {
+	public String createProduct(@RequestBody CreateProductDTO createProductRestModel) {
 		
 		CreateProductCommand productCommand = CreateProductCommand.builder()
 			.price(createProductRestModel.getPrice())
