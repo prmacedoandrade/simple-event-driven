@@ -1,4 +1,4 @@
-package com.estore.products.model;
+package com.estore.products.core.model;
 
 import java.io.Serializable;
 import java.math.BigDecimal;

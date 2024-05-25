@@ -1,4 +1,4 @@
-package com.estore.products.aggregate;
+package com.estore.products.core;
 
 import java.math.BigDecimal;
 
@@ -10,8 +10,8 @@ import org.axonframework.spring.stereotype.Aggregate;
 import org.springframework.beans.BeanUtils;
 import org.springframework.util.StringUtils;
 
-import com.estore.products.api.command.CreateProductCommand;
-import com.estore.products.api.event.ProductCreateEvent;
+import com.estore.products.command.CreateProductCommand;
+import com.estore.products.core.events.ProductCreateEvent;
 
 @Aggregate
 public class ProductAggregate {

@@ -1,36 +1,29 @@
-package com.estore.products.controller;
+package com.estore.products.command.rest.controller;
 
 import java.util.UUID;
 
 import org.axonframework.commandhandling.gateway.CommandGateway;
-import org.springframework.core.env.Environment;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.estore.products.api.command.CreateProductCommand;
-import com.estore.products.dto.CreateProductDTO;
+import com.estore.products.command.CreateProductCommand;
+import com.estore.products.command.rest.CreateProductRestModel;
 
 @RestController
 @RequestMapping("/products")
-public class ProductController {
+public class ProductCommandController {
 	
-	private final Environment env;
 	private final CommandGateway commandGateway;
-	private String port;
 	
-	public ProductController(Environment env, CommandGateway commandGateway) {
+	public ProductCommandController(CommandGateway commandGateway) {
 		super();
-		this.env = env;
 		this.commandGateway = commandGateway;
 	}
 
 	@PostMapping
-	public String createProduct(@RequestBody CreateProductDTO createProductRestModel) {
+	public String createProduct(@RequestBody CreateProductRestModel createProductRestModel) {
 		
 		CreateProductCommand productCommand = CreateProductCommand.builder()
 			.price(createProductRestModel.getPrice())
@@ -47,20 +40,5 @@ public class ProductController {
 
 		return returnValue;
 	}
-	
-	@GetMapping
-	public String getProduct() {
-		return "HTTP GET HANDELED " + port;
-	}
-	
-	@PutMapping
-	public String updateProduct() {
-		return "HTTP PUT HANDELED " + port;
-	}
-	
-	@DeleteMapping
-	public String deleteProduct() {
-		return "HTTP DELETE HANDELED " + port;
-	}
-	
+
 }
