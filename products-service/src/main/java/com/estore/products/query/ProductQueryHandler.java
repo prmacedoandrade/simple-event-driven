@@ -19,7 +19,7 @@ public class ProductQueryHandler {
 	}
 	
 	@QueryHandler
-	public List<ProductRestModel> findProducts(FindProductsQuery findProductsQuery){
+	public List<ProductRestModel> findProducts(FindProductQuery findProductsQuery){
 		
 		return productRepository.findAll().stream().map(o->{
 			ProductRestModel productDTO = new ProductRestModel();

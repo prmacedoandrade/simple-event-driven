@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.estore.products.query.FindProductsQuery;
+import com.estore.products.query.FindProductQuery;
 import com.estore.products.query.rest.ProductRestModel;
 
 
@@ -25,7 +25,7 @@ public class ProductQueryController {
 	@GetMapping
 	public List<ProductRestModel> getProducts() {
 		
-		FindProductsQuery findProductsQuery = new FindProductsQuery();
+		FindProductQuery findProductsQuery = new FindProductQuery();
 		return queryGateway.query(findProductsQuery, ResponseTypes.multipleInstancesOf(ProductRestModel.class)).join();
 		
 	}

@@ -4,14 +4,14 @@ import org.axonframework.commandhandling.SimpleCommandBus;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import com.estore.products.command.CreateProductsCommandInterceptor;
+import com.estore.products.command.interceptor.CreateProductCommandInterceptor;
 
 @Configuration
 public class CommandBusConfiguration {
 
-    private final CreateProductsCommandInterceptor myCommandDispatchInterceptor;
+    private final CreateProductCommandInterceptor myCommandDispatchInterceptor;
     
-    public CommandBusConfiguration(CreateProductsCommandInterceptor myCommandDispatchInterceptor) {
+    public CommandBusConfiguration(CreateProductCommandInterceptor myCommandDispatchInterceptor) {
         this.myCommandDispatchInterceptor = myCommandDispatchInterceptor;
     }
 

@@ -1,5 +1,5 @@
 package com.estore.products.query;
 
-public class FindProductsQuery {
+public class FindProductQuery {
 
 }
