@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.estore.products.command.CreateProductCommand;
 import com.estore.products.command.rest.CreateProductRestModel;
 
+import jakarta.validation.Valid;
+
 @RestController
 @RequestMapping("/products")
 public class ProductCommandController {
@@ -23,7 +25,7 @@ public class ProductCommandController {
 	}
 
 	@PostMapping
-	public String createProduct(@RequestBody CreateProductRestModel createProductRestModel) {
+	public String createProduct(@RequestBody @Valid CreateProductRestModel createProductRestModel) {
 		
 		CreateProductCommand productCommand = CreateProductCommand.builder()
 			.price(createProductRestModel.getPrice())
