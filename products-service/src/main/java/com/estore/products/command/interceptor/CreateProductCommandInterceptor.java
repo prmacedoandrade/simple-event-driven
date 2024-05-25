@@ -45,7 +45,7 @@ public class CreateProductCommandInterceptor implements MessageDispatchIntercept
 						.findByProductIdOrTitle(createProductCommand.getProductId(), createProductCommand.getTitle()).isPresent();
 				
 				if(Boolean.TRUE.equals(isPresent)) {
-					throw new IllegalStateException(String.format("Product with product id %s or title %s already exists ", 
+					throw new IllegalStateException(String.format("Product with product id %s or title %s already exists", 
 							createProductCommand.getProductId(), createProductCommand.getTitle()));
 				}
 				
