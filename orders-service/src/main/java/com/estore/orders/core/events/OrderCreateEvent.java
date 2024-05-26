@@ -1,12 +1,14 @@
 package com.estore.orders.core.events;
 
-import java.math.BigDecimal;
-
 import com.estore.orders.core.model.OrderStatus;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class OrderCreateEvent {
 	
 	private String orderId;
