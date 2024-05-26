@@ -10,6 +10,7 @@ import org.axonframework.spring.stereotype.Aggregate;
 import org.springframework.beans.BeanUtils;
 import org.springframework.util.StringUtils;
 
+import com.estore.core.command.ReserveProductCommand;
 import com.estore.products.core.events.ProductCreateEvent;
 
 @Aggregate
@@ -46,6 +47,15 @@ public class ProductAggregate {
 		//if(true) {
 			//throw new Exception("Exeption throw in ProductAggregate method");
 		//}
+		
+	}
+	
+	@CommandHandler
+	public void handle(ReserveProductCommand reserveProductCommand) {
+		
+		if(quantity < reserveProductCommand.getQuantity()) {
+			throw new IllegalArgumentException("Insufficient number of items in stock");
+		}
 		
 	}
 	 
