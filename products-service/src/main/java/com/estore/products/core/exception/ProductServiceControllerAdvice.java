@@ -9,6 +9,7 @@ import static org.springframework.http.HttpStatus.*;
 
 import java.util.Date;
 
+import org.axonframework.commandhandling.CommandExecutionException;
 import org.springframework.http.HttpHeaders;
 
 @ControllerAdvice
@@ -17,6 +18,14 @@ public class ProductServiceControllerAdvice {
 	@ExceptionHandler(IllegalStateException.class)
 	public ResponseEntity<Object> handleIllegalStateException(IllegalStateException ex, WebRequest req){
 		
+		ErrorMessage error = new ErrorMessage(new Date(), ex.getMessage());
+		return new ResponseEntity<>(error, new HttpHeaders(), INTERNAL_SERVER_ERROR);
+		
+	}
+	
+	@ExceptionHandler(CommandExecutionException.class)
+	public ResponseEntity<Object> handleCommandExecutionException(CommandExecutionException ex, WebRequest req){
+
 		ErrorMessage error = new ErrorMessage(new Date(), ex.getMessage());
 		return new ResponseEntity<>(error, new HttpHeaders(), INTERNAL_SERVER_ERROR);
 		

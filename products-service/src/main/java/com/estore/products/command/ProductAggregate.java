@@ -1,4 +1,4 @@
-package com.estore.products.core;
+package com.estore.products.command;
 
 import java.math.BigDecimal;
 
@@ -10,7 +10,6 @@ import org.axonframework.spring.stereotype.Aggregate;
 import org.springframework.beans.BeanUtils;
 import org.springframework.util.StringUtils;
 
-import com.estore.products.command.CreateProductCommand;
 import com.estore.products.core.events.ProductCreateEvent;
 
 @Aggregate
@@ -41,6 +40,12 @@ public class ProductAggregate {
 		BeanUtils.copyProperties(createProductCommand, productCreateEvent);
 		
 		AggregateLifecycle.apply(productCreateEvent);
+		
+		//Any error generated here will become a CommandExecutionException error
+		//To showcase error handling on Aggregate class
+		//if(true) {
+			//throw new Exception("Exeption throw in ProductAggregate method");
+		//}
 		
 	}
 	 
