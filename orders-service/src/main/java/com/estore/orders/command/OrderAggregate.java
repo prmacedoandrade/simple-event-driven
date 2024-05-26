@@ -7,7 +7,7 @@ import org.axonframework.modelling.command.AggregateLifecycle;
 import org.axonframework.spring.stereotype.Aggregate;
 import org.springframework.beans.BeanUtils;
 
-import com.estore.orders.core.events.CreateOrderEvent;
+import com.estore.orders.core.events.OrderCreateEvent;
 import com.estore.orders.core.model.OrderStatus;
 
 @Aggregate
@@ -25,7 +25,7 @@ public class OrderAggregate {
 	public OrderAggregate(CreateOrderCommand createOrderCommand) {
 	
 		//TODO: Validation
-		CreateOrderEvent createOrderEvent = new CreateOrderEvent();
+		OrderCreateEvent createOrderEvent = new OrderCreateEvent();
 		BeanUtils.copyProperties(createOrderCommand, createOrderEvent);
 		
 		AggregateLifecycle.apply(createOrderEvent);
@@ -33,7 +33,7 @@ public class OrderAggregate {
 	}
 	
 	@EventSourcingHandler
-	public void on(CreateOrderEvent createOrderEvent) {
+	public void on(OrderCreateEvent createOrderEvent) {
 		
 		this.orderId = createOrderEvent.getOrderId();
 		this.userId = createOrderEvent.getUserId();

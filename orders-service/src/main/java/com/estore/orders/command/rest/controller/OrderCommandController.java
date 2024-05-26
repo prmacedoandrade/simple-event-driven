@@ -9,7 +9,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.estore.orders.command.CreateOrderCommand;
-import com.estore.orders.command.rest.CreateOrderRestModel;
+import com.estore.orders.command.rest.OrderCreateRestModel;
+import com.estore.orders.core.model.OrderStatus;
 
 @RestController
 @RequestMapping("/orders")
@@ -22,13 +23,16 @@ public class OrderCommandController {
 	}
 	
 	@PostMapping
-	public String createOrder(@RequestBody CreateOrderRestModel createOrderRestModel) {
+	public String createOrder(@RequestBody OrderCreateRestModel createOrderRestModel) {
+		
+		String userId = "27b95829-4f3f-4ddf-8983-151ba010e35b";
 		
 		CreateOrderCommand createOrderCommand = CreateOrderCommand.builder()
 			.orderId(UUID.randomUUID().toString())
 			.productId(createOrderRestModel.getProductId())
 			.quantity(createOrderRestModel.getQuantity())
-			.userId("27b95829-4f3f-4ddf-8983-151ba010e35b")
+			.userId(userId)
+			.orderStatus(OrderStatus.CREATED)
 			.addressId(createOrderRestModel.getAddressId()).build();
 		
 		return commandGateway.sendAndWait(createOrderCommand);

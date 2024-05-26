@@ -7,7 +7,7 @@ import com.estore.orders.core.model.OrderStatus;
 import lombok.Data;
 
 @Data
-public class CreateOrderEvent {
+public class OrderCreateEvent {
 	
 	private String orderId;
 	private String productId;

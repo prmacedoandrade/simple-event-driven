@@ -5,7 +5,7 @@ import java.io.Serializable;
 import lombok.Data;
 
 @Data
-public class CreateOrderRestModel implements Serializable{
+public class OrderCreateRestModel implements Serializable{
 	
 	private static final long serialVersionUID = 9188889953717123094L;
 	
