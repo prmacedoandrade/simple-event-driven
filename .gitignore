@@ -35,8 +35,6 @@ build/
 # Ignore Docker data files
 docker-data/data/AxonIQ.pid
 docker-data/data/axonserver-configdb.mv.db
-docker-data/data/_diagnostics/logfile-2024-05-24-0.log.gz
-docker-data/data/_diagnostics/logfile-2024-05-25-0.log.gz
 docker-data/data/_diagnostics/logfile.log
 
 # Ignore database data files
@@ -44,3 +42,13 @@ database-data/orders.lock.db
 database-data/orders.mv.db
 database-data/orders.trace.db
 database-data/products.mv.db
+
+# Ignore all .log.gz files
+*.log.gz
+
+# Ignore all .lock.db files
+*.lock.db
+
+# Ignore all .mv.db files
+*.mv.db
+
