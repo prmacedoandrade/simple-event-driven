@@ -24,4 +24,4 @@ The architecture consists of the following components:
 ## Setup
 1. Clone repository
 
-##TODO: Finish read me.
+## TODO: Finish read me.
