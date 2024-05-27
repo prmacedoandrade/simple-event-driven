@@ -1,9 +1,11 @@
 # Simple Event Driven Microservices Project
 
+***Please note that this is a work in progress.***
+
 This project demonstrates an event-driven microservices architecture using Axon, Eureka, CQRS, and Spring. The repository contains multiple 
 microservices that interact with each other through event sourcing and command-query responsibility segregation (CQRS) patterns.
 
-The project contains some mock implementations to focus on demonstrating inter-service communication rather than the microservice logic itself. Please note that this is a work in progress.
+The project contains some mock implementations to focus on demonstrating inter-service communication rather than the microservice logic itself. 
 
 ## Architecture
 The architecture consists of the following components:
