@@ -2,11 +2,13 @@ package com.estore.core.command;
 
 import org.axonframework.modelling.command.TargetAggregateIdentifier;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 
 @Data 
 @Builder
+@AllArgsConstructor
 public class ReserveProductCommand {
 	
 	@TargetAggregateIdentifier
