@@ -1,18 +1,15 @@
-package com.estore.core.command;
-
-import org.axonframework.modelling.command.TargetAggregateIdentifier;
+package com.estore.core.event;
 
 import lombok.Builder;
 import lombok.Data;
 
-@Data 
+@Data
 @Builder
-public class ReserveProductCommand {
+public class ProductReserveEvent {
 	
-	@TargetAggregateIdentifier
 	private final String productId;
-	
 	private final int quantity;
 	private final String orderId;
 	private final String userId;
+
 }
