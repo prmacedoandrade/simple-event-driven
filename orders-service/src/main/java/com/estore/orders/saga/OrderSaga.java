@@ -5,8 +5,10 @@ import org.axonframework.commandhandling.CommandCallback;
 import org.axonframework.commandhandling.CommandMessage;
 import org.axonframework.commandhandling.CommandResultMessage;
 import org.axonframework.commandhandling.gateway.CommandGateway;
+import org.axonframework.messaging.responsetypes.ResponseTypes;
 import org.axonframework.modelling.saga.SagaEventHandler;
 import org.axonframework.modelling.saga.StartSaga;
+import org.axonframework.queryhandling.QueryGateway;
 import org.axonframework.spring.stereotype.Saga;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,6 +16,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.estore.core.command.ReserveProductCommand;
 import com.estore.core.event.ProductReserveEvent;
+import com.estore.core.model.User;
+import com.estore.core.query.FechtUserPaymentDetailsQuery;
 import com.estore.orders.core.events.OrderCreateEvent;
 
 @Saga
@@ -24,6 +28,9 @@ public class OrderSaga {
 	// Saga is serializable so we put command gateway as transient  
 	@Autowired
 	private transient CommandGateway commandGateway;
+	
+	@Autowired
+	private transient QueryGateway queryGateway;
 	
 	@StartSaga
 	@SagaEventHandler(associationProperty = "orderId")
@@ -44,7 +51,7 @@ public class OrderSaga {
 					CommandResultMessage<? extends Object> commandResultMessage) {
 				
 			    if (commandResultMessage.isExceptional()) {
-                    // START COMPENSATION TRANSACTION
+                    // Start a compensation transaction
                     LOGGER.error("Error handling ReserveProductCommand: {}", commandResultMessage.exceptionResult().getMessage());
                 } else {
                     LOGGER.info("ReserveProductCommand handled successfully for order id {}", createEvent.getOrderId());
@@ -58,8 +65,31 @@ public class OrderSaga {
 	
 	@SagaEventHandler(associationProperty = "orderId")
 	public void handle(ProductReserveEvent productReserveEvent) {
-		LOGGER.info("ProductReserveEvent in OrderSaga is called for order id {} and product id {}", productReserveEvent.getOrderId(), productReserveEvent.getProductId());
-		//Process user payment				
+		LOGGER.info("ProductReserveEvent in OrderSaga is called for order id {} and product id {}", productReserveEvent.getOrderId(), 
+				productReserveEvent.getProductId());
+		
+		//Process user payment 
+		FechtUserPaymentDetailsQuery fechtUserPaymentDetailsQuery = 
+				new FechtUserPaymentDetailsQuery(productReserveEvent.getUserId());
+		
+		User user = null;
+		
+		// If fails start a compensation transaction
+		try {
+			user = queryGateway.query(fechtUserPaymentDetailsQuery, ResponseTypes.instanceOf(User.class)).join();
+		} catch (Exception ex) {
+			LOGGER.info(ex.getMessage());
+	        // Start a compensation transaction
+			return;
+		}
+		
+		if(user == null) {
+			// Start a compensation transaction
+			return;
+		}
+		
+		LOGGER.info("Succecssfuly fetched user payment detais for user {}", user.getFirstName());
+						
 	}
 	
 }
