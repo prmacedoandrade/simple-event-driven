@@ -17,8 +17,11 @@ public class PaymentAggregate {
 
 	private String orderId;
 	
+	public PaymentAggregate() {
+	}
+
 	@CommandHandler
-	public void handle(ProcessPaymentCommand processPaymentCommand) {
+    public PaymentAggregate(ProcessPaymentCommand processPaymentCommand) {
 		
 		if(processPaymentCommand.getPaymentDetails() == null) {
     		throw new IllegalArgumentException("Missing payment details");
@@ -32,8 +35,10 @@ public class PaymentAggregate {
     		throw new IllegalArgumentException("Missing paymentId");
     	}
     	
-    	AggregateLifecycle.apply(new PaymentProcessedEvent(processPaymentCommand.getOrderId(),
-    			processPaymentCommand.getPaymentId()));
+    	PaymentProcessedEvent event = new PaymentProcessedEvent(processPaymentCommand.getOrderId(),
+    			processPaymentCommand.getPaymentId());
+    	
+    	AggregateLifecycle.apply(event);
     	
 	}
 	
