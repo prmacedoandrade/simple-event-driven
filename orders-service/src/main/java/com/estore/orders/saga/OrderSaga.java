@@ -9,6 +9,7 @@ import org.axonframework.commandhandling.CommandMessage;
 import org.axonframework.commandhandling.CommandResultMessage;
 import org.axonframework.commandhandling.gateway.CommandGateway;
 import org.axonframework.messaging.responsetypes.ResponseTypes;
+import org.axonframework.modelling.saga.EndSaga;
 import org.axonframework.modelling.saga.SagaEventHandler;
 import org.axonframework.modelling.saga.StartSaga;
 import org.axonframework.queryhandling.QueryGateway;
@@ -19,9 +20,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.estore.core.command.ProcessPaymentCommand;
 import com.estore.core.command.ReserveProductCommand;
+import com.estore.core.event.PaymentProcessedEvent;
 import com.estore.core.event.ProductReserveEvent;
 import com.estore.core.model.User;
 import com.estore.core.query.FechtUserPaymentDetailsQuery;
+import com.estore.orders.command.ApprovedOrderCommand;
+import com.estore.orders.core.events.OrderApprovedEvent;
 import com.estore.orders.core.events.OrderCreateEvent;
 
 @Saga
@@ -104,8 +108,9 @@ public class OrderSaga {
 		String result = null;
 		
 		try {
-			result = commandGateway.sendAndWait(processPaymentCommand,10,TimeUnit.SECONDS);
+			result = commandGateway.sendAndWait(processPaymentCommand,20,TimeUnit.SECONDS);
 		} catch (Exception ex) {
+			ex.printStackTrace();
 			// Start a compensation transaction
 			LOGGER.error(ex.getMessage());
 
@@ -117,6 +122,19 @@ public class OrderSaga {
 		}
 		
 		
+	}
+	
+	@SagaEventHandler(associationProperty = "orderId")
+	public void handle(PaymentProcessedEvent paymentProcessedEvent) {
+		ApprovedOrderCommand approvedOrderCommand = new ApprovedOrderCommand(paymentProcessedEvent.getOrderId());
+		commandGateway.send(approvedOrderCommand);
+	}
+
+	@EndSaga
+	@SagaEventHandler(associationProperty = "orderId")
+	public void handle(OrderApprovedEvent orderApprovedEvent) {
+		LOGGER.info("Order is approved. Order Saga is complete for order id: {}", orderApprovedEvent.getOrderId());
+		//SagaLifecycle.end(); with this you can end programmatically
 	}
 	
 }
