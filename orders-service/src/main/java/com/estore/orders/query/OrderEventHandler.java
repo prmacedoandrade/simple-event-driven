@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 
 import com.estore.orders.core.events.OrderApprovedEvent;
 import com.estore.orders.core.events.OrderCreateEvent;
+import com.estore.orders.core.events.OrderRejectedEvent;
 import com.estore.orders.core.model.OrderBean;
 import com.estore.orders.core.model.OrderStatus;
 import com.estore.orders.core.repository.OrderRepository;
@@ -44,6 +45,22 @@ public class OrderEventHandler {
 		
 		OrderBean orderBean = optBean.get();
 		orderBean.setOrderStatus(approvedEvent.getOrderStatus());
+		
+		orderRepository.save(orderBean);
+		
+	}
+	
+	@EventHandler
+	public void on(OrderRejectedEvent orderRejectedEvent) {
+		
+		Optional<OrderBean> optBean = orderRepository.findById(orderRejectedEvent.getOrderId());
+		
+		if(optBean.isEmpty()) {
+			//TODO deal with it
+		}
+		
+		OrderBean orderBean = optBean.get();
+		orderBean.setOrderStatus(orderRejectedEvent.getOrderStatus());
 		
 		orderRepository.save(orderBean);
 		

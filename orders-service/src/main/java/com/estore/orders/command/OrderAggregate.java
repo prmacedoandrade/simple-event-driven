@@ -9,6 +9,7 @@ import org.springframework.beans.BeanUtils;
 
 import com.estore.orders.core.events.OrderApprovedEvent;
 import com.estore.orders.core.events.OrderCreateEvent;
+import com.estore.orders.core.events.OrderRejectedEvent;
 import com.estore.orders.core.model.OrderStatus;
 
 @Aggregate
@@ -59,6 +60,19 @@ public class OrderAggregate {
 	@EventSourcingHandler
 	public void on(OrderApprovedEvent orderApprovedEvent) {
 		this.orderStatus = orderApprovedEvent.getOrderStatus();
+	}
+	
+	@CommandHandler
+	public void handle(RejectOrderCommnad rejectOrderCommnad) {
+		
+		OrderRejectedEvent orderRejectedEvent = new OrderRejectedEvent(rejectOrderCommnad.getOrderId(), rejectOrderCommnad.getMessage());
+		AggregateLifecycle.apply(orderRejectedEvent);
+		
+	}
+	
+	@EventSourcingHandler
+	public void on(OrderRejectedEvent orderRejectedEvent) {
+		this.orderStatus = orderRejectedEvent.getOrderStatus();
 	}
 	
 }
