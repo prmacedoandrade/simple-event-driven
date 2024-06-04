@@ -2,7 +2,6 @@ package com.estore.core.event;
 
 import lombok.Data;
 
-
 @Data
 public class PaymentProcessedEvent {
 

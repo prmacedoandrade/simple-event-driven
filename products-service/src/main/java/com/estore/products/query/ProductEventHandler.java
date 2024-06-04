@@ -10,11 +10,16 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Component;
 
+import com.estore.core.event.ProductReservationCanceledEvent;
 import com.estore.core.event.ProductReserveEvent;
 import com.estore.products.core.events.ProductCreateEvent;
 import com.estore.products.core.model.ProductBean;
 import com.estore.products.core.repository.ProductRepository;
 
+/**
+ * On query side, update read DB
+ * 
+ */
 // Common name ProductProjection
 @Component
 @ProcessingGroup("product-group")
@@ -61,28 +66,45 @@ public class ProductEventHandler {
 	
 	@EventHandler
 	public void on(ProductReserveEvent productReserveEvent) {
-		
-		
-		try {
-			
-		
-			
-		
+
 		Optional<ProductBean> opt = productRepository.findById(productReserveEvent.getProductId());
 		
-		LOGGER.info("ProductReserveEvent in ProductEventHandler is called for order id {} and product id {}", 
-				productReserveEvent.getOrderId(), 
-				productReserveEvent.getProductId());
-		
-		if(opt.isPresent()) {
+		LOGGER.info("ProductReserveEvent in ProductEventHandler is called for order id {} and product id {}",
+				productReserveEvent.getOrderId(), productReserveEvent.getProductId());
+
+		if (opt.isPresent()) {
 			ProductBean bean = opt.get();
+			
+			LOGGER.debug("ProductReserveEvent: current product quantity {}", bean.getQuantity());
+			
 			bean.setQuantity(bean.getQuantity() - productReserveEvent.getQuantity());
 			productRepository.save(bean);
+			
+			LOGGER.debug("ProductReserveEvent: new product quantity {}", bean.getQuantity());
 		}
-		} catch (Exception e) {
-			e.printStackTrace();
+
+	}
+	
+	@EventHandler
+	public void on(ProductReservationCanceledEvent canceledEvent) {
+		
+		Optional<ProductBean> opt = productRepository.findById(canceledEvent.getProductId());
+
+		LOGGER.info("ProductReservationCanceledEvent in ProductEventHandler is called for order id {} and product id {}",
+				canceledEvent.getOrderId(), canceledEvent.getProductId());
+
+		if (opt.isPresent()) {
+			ProductBean bean = opt.get();
+			
+			LOGGER.debug("ProductReservationCanceledEvent: current product quantity {}", bean.getQuantity());
+			
+			bean.setQuantity(bean.getQuantity() + canceledEvent.getQuantity());
+			productRepository.save(bean);
+			
+			LOGGER.debug("ProductReservationCanceledEvent: new product quantity {}", bean.getQuantity());
+			
 		}
 		
 	}
-	
+
 }
