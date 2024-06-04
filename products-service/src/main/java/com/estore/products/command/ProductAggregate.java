@@ -10,7 +10,9 @@ import org.axonframework.spring.stereotype.Aggregate;
 import org.springframework.beans.BeanUtils;
 import org.springframework.util.StringUtils;
 
+import com.estore.core.command.CancelProductReservationCommand;
 import com.estore.core.command.ReserveProductCommand;
+import com.estore.core.event.ProductReservationCanceledEvent;
 import com.estore.core.event.ProductReserveEvent;
 import com.estore.products.core.events.ProductCreateEvent;
 
@@ -46,9 +48,18 @@ public class ProductAggregate {
 		//Any error generated here will become a CommandExecutionException error
 		//To showcase error handling on Aggregate class
 		//if(true) {
-			//throw new Exception("Exeption throw in ProductAggregate method");
+			//throw new Exception("Exception throw in ProductAggregate method");
 		//}
 		
+	}
+	
+	//Avoid put bussines logic
+	@EventSourcingHandler
+	public void on(ProductCreateEvent productCreateEvent) {
+		this.productId = productCreateEvent.getProductId();
+		this.title = productCreateEvent.getTitle();
+		this.price = productCreateEvent.getPrice();
+		this.quantity = productCreateEvent.getQuantity();
 	}
 	
 	@CommandHandler
@@ -67,20 +78,25 @@ public class ProductAggregate {
 		AggregateLifecycle.apply(productReserveEvent);
 		
 	}
-	 
-	//Avoid put bussines logic
-	@EventSourcingHandler
-	public void on(ProductCreateEvent productCreateEvent) {
-		this.productId = productCreateEvent.getProductId();
-		this.title = productCreateEvent.getTitle();
-		this.price = productCreateEvent.getPrice();
-		this.quantity = productCreateEvent.getQuantity();
-		
-	}
 	
 	@EventSourcingHandler
 	public void on(ProductReserveEvent productReserveEvent) {
 		this.quantity -= productReserveEvent.getQuantity();
+	}
+	
+	
+	@CommandHandler
+	public void handle(CancelProductReservationCommand cancelProductReservationCommand) {
+		
+		ProductReservationCanceledEvent cancelReserveEvent = new ProductReservationCanceledEvent();
+		BeanUtils.copyProperties(cancelProductReservationCommand, cancelReserveEvent);
+		AggregateLifecycle.apply(cancelReserveEvent);
+		
+	}
+	
+	@EventSourcingHandler
+	public void on(ProductReservationCanceledEvent productReservationCanceledEvent) {
+		this.quantity += productReservationCanceledEvent.getQuantity();
 	}
 	
 }
